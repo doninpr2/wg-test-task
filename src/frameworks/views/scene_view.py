@@ -6,6 +6,7 @@ from PyQt6.QtGui import QColor
 
 from domain.entities.ColoredRectangle import ColoredRectangle, ColoredRectangleCreationProps
 from domain.usecases.figure_usecase_abstract import FigureUseCaseAbstract
+from frameworks.views.rect_view import DraggableRectItem
 
 class SceneView(QGraphicsScene):
     def __init__(self, figure_usecase: FigureUseCaseAbstract[ColoredRectangle, ColoredRectangleCreationProps], parent=None):
@@ -13,9 +14,7 @@ class SceneView(QGraphicsScene):
         self.figure_usecase = figure_usecase
 
     def draw_figure(self, figure: ColoredRectangle):
-        rect_item = QGraphicsRectItem(figure.position[0], figure.position[1], figure.width, figure.height)
-        rect_item.setBrush(figure.color)
-        rect_item.setPen(figure.color)
+        rect_item = DraggableRectItem(figure, self.figure_usecase)
         self.addItem(rect_item)
 
     def mouseDoubleClickEvent(self, event):
