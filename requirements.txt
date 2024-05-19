@@ -1,0 +1,2 @@
+PyQt6==6.7.0
+dependency-injector==4.41.0
