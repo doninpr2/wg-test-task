@@ -25,6 +25,7 @@ class FiguresMemoryStorage(StorageAbstract[ColoredRectangle, ColoredRectangleCre
     def update(self, figure: ColoredRectangle):
         """Update figure in the storage."""
         self.figures[figure.id] = figure
+        return self.figures[figure.id]
         
     def __repr__(self):
         return f"FiguresStorage(figures={self.figures})"

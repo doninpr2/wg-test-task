@@ -11,6 +11,7 @@ class DraggableRectItem(QGraphicsRectItem):
         self.id = figure.id
         self.setBrush(figure.color)
         self.setPen(figure.color)
+        self.prev_pos = self.pos()
 
         self.setFlags(QGraphicsRectItem.GraphicsItemFlag.ItemIsMovable | QGraphicsRectItem.GraphicsItemFlag.ItemSendsGeometryChanges)
         self.setAcceptHoverEvents(True)
@@ -18,8 +19,22 @@ class DraggableRectItem(QGraphicsRectItem):
 
     def itemChange(self, change: 'QGraphicsItem.GraphicsItemChange', value: QPointF):
         if change == QGraphicsItem.GraphicsItemChange.ItemPositionChange:
-            self.use_case.move(self.id, value.x(), value.y())
-        return super().itemChange(change, value)
+            self.prev_pos = self.pos()
+        if change == QGraphicsItem.GraphicsItemChange.ItemPositionHasChanged:
+            if not self.has_collision():
+                self.use_case.move(self.id, value.x(), value.y())
+                return super().itemChange(change, value)
+            else:
+                self.setPos(self.prev_pos)
+        else:
+          return super().itemChange(change, value)
+    
+    def has_collision(self):
+        # items = self.collidingItems()
+        # for item in items:
+        #     if isinstance(item, DraggableRectItem) and item.id is not self.id:
+        #         return True
+        return False
 
     def mousePressEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton:
