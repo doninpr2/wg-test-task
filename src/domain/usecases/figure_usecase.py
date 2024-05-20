@@ -25,8 +25,6 @@ class FigureUseCase(FigureUseCaseAbstract[ColoredRectangle, ColoredRectangleCrea
         if rect is None:
             return None
         
-        print('move', pos_x, pos_y)
-        
         rect.position = (rect.initial_position[0] + pos_x, rect.initial_position[1] + pos_y)
 
         for subscriber in self.move_subscribers:
