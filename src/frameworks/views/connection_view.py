@@ -8,7 +8,7 @@ from domain.usecases.connections_usecase_abstract import ConnectionsUseCaseAbstr
 from domain.usecases.figure_usecase_abstract import FigureUseCaseAbstract
 
 class ConnectionItem(QGraphicsLineItem):
-    def __init__(self, figures_usecase: FigureUseCaseAbstract[ColoredRectangle, ColoredRectangleCreationProps], connections_usecase: ConnectionsUseCaseAbstract, connection: FiguresConnection, color: str = 'white', width: int = 2, parent=None):
+    def __init__(self, figures_usecase: FigureUseCaseAbstract[ColoredRectangle, ColoredRectangleCreationProps], connections_usecase: ConnectionsUseCaseAbstract, connection: FiguresConnection, color: str = 'black', width: int = 2, parent=None):
         self.figures_usecase = figures_usecase
         self.connections_usecase = connections_usecase
         self.connection = connection
@@ -20,7 +20,7 @@ class ConnectionItem(QGraphicsLineItem):
         super().__init__(start_pos[0], start_pos[1], end_pos[0], end_pos[1], parent)
 
         self.setPen(QPen(QColor(color), width))
-        self.setZValue(1)
+        self.setZValue(11)
 
         self.figures_usecase.move_subcribe(self.onMove)
 

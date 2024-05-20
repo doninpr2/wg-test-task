@@ -21,6 +21,11 @@ class FigureUseCaseAbstract(ABC, Generic[T, CreateProps]):
         pass
 
     @abstractmethod
+    def is_collided(self, figure: T) -> bool:
+        """ Check if the figure is collided with all others figures. """
+        pass
+
+    @abstractmethod
     def move(self, id: str, pos_x: float, pos_y: float) -> T:
         """ Move the figure to the given position. """
         pass

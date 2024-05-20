@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QGraphicsRectItem, QGraphicsItem
+from PyQt6.QtWidgets import QGraphicsRectItem, QGraphicsItem, QGraphicsScene
 from PyQt6.QtCore import Qt, QPointF
 
 from domain.entities.ColoredRectangle import ColoredRectangle, ColoredRectangleCreationProps
@@ -6,9 +6,10 @@ from domain.usecases.connections_usecase_abstract import ConnectionsUseCaseAbstr
 from domain.usecases.figure_usecase_abstract import FigureUseCaseAbstract
 
 class DraggableRectItem(QGraphicsRectItem):
-    def __init__(self, figure: ColoredRectangle, figures_usecase: FigureUseCaseAbstract[ColoredRectangle, ColoredRectangleCreationProps], connections_usecase: ConnectionsUseCaseAbstract):
+    def __init__(self, figure: ColoredRectangle, figures_usecase: FigureUseCaseAbstract[ColoredRectangle, ColoredRectangleCreationProps], connections_usecase: ConnectionsUseCaseAbstract, scene: QGraphicsScene):
         self.figures_usecase = figures_usecase
         self.connections_usecase = connections_usecase
+        self.parent_scene = scene
         super().__init__(figure.position[0], figure.position[1], figure.width, figure.height)
         self.id = figure.id
         self.color = figure.color
@@ -21,31 +22,40 @@ class DraggableRectItem(QGraphicsRectItem):
         self.setFlags(QGraphicsRectItem.GraphicsItemFlag.ItemIsMovable | QGraphicsRectItem.GraphicsItemFlag.ItemSendsGeometryChanges)
         self.setAcceptHoverEvents(True)
         self.setAcceptedMouseButtons(Qt.MouseButton.LeftButton)
-        self.setZValue(0)
+        self.setZValue(10)
 
     def itemChange(self, change: 'QGraphicsItem.GraphicsItemChange', value: QPointF):
         if change == QGraphicsItem.GraphicsItemChange.ItemPositionChange:
             self.prev_pos = self.pos()
-        if change == QGraphicsItem.GraphicsItemChange.ItemPositionHasChanged:
-            if not self.has_collision():
-                positon = self.pos()
-                self.figures_usecase.move(self.id, positon.x(), positon.y())
+            if not self.has_collision(value) and self.is_in_scene(value):
                 return super().itemChange(change, value)
             else:
-                self.setPos(self.prev_pos)
+                return super().itemChange(change, self.pos())         
+        if change == QGraphicsItem.GraphicsItemChange.ItemPositionHasChanged:
+            self.figures_usecase.move(self.id, value.x(), value.y())
+            return super().itemChange(change, value)
         else:
           return super().itemChange(change, value)
     
-    def has_collision(self):
-        # items = self.collidingItems()
-        # for item in items:
-        #     if isinstance(item, DraggableRectItem) and item.id is not self.id:
-        #         return True
-        return False
+    def has_collision(self, value: QPointF):
+        rect = self.figures_usecase.get(self.id)
+        if rect is None:
+            return False
+        
+        rect.position = (rect.initial_position[0] + value.x(), rect.initial_position[1] + value.y())
+        return self.figures_usecase.is_collided(rect)
+    
+    def is_in_scene(self, value: QPointF):
+        rect = self.figures_usecase.get(self.id)
+        if rect is None:
+            return False
+        
+        rect.position = (rect.initial_position[0] + value.x(), rect.initial_position[1] + value.y())
+        bottom_left, top_right = rect.get_bbox()
+        return self.parent_scene.sceneRect().contains(bottom_left[0], bottom_left[1]) and self.parent_scene.sceneRect().contains(top_right[0], top_right[1])
     
     def onSelect(self, connections: list[str]):
         try:
-          print(connections.index(self.id))
           if connections.index(self.id) >= 0:
             self.setPen(Qt.GlobalColor.green)
         except ValueError:
