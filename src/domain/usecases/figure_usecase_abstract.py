@@ -24,3 +24,8 @@ class FigureUseCaseAbstract(ABC, Generic[T, CreateProps]):
     def move(self, id: str, pos_x: float, pos_y: float) -> T:
         """ Move the figure to the given position. """
         pass
+
+    @abstractmethod
+    def move_subcribe(self, callback: callable):
+        """ Subscribe to the move event. """
+        pass

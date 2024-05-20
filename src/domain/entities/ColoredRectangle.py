@@ -12,6 +12,7 @@ class ColoredRectangleProps(ColoredRectangleCreationProps):
 class ColoredRectangle(ColoredRectangleProps):
     def __init__(self, id: str, width: float, height: float, position: tuple = (0, 0), color: str = 'white'):
         self.id = id
+        self.initial_position = position
         self.position = position
         self.width = width
         self.height = height
