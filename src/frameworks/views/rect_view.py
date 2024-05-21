@@ -5,6 +5,17 @@ from domain.entities.ColoredRectangle import ColoredRectangle, ColoredRectangleC
 from domain.usecases.connections_usecase_abstract import ConnectionsUseCaseAbstract
 from domain.usecases.figure_usecase_abstract import FigureUseCaseAbstract
 
+""" Реализация QGraphicsRectItem прямоугольника с логикой
+
+    Attributes:
+        figures_usecase (FigureUseCaseAbstract[ColoredRectangle, ColoredRectangleCreationProps]): Используемый usecase для работы с фигурами
+        connections_usecase (ConnectionsUseCaseAbstract): Используемый usecase для работы с соединениями
+        parent_scene (QGraphicsScene): Родительская сцена
+        id (str): Идентификатор фигуры
+        color (str): Цвет фигуры
+        clicked (bool): Флаг нажатия на фигуру
+
+"""
 class DraggableRectItem(QGraphicsRectItem):
     def __init__(self, figure: ColoredRectangle, figures_usecase: FigureUseCaseAbstract[ColoredRectangle, ColoredRectangleCreationProps], connections_usecase: ConnectionsUseCaseAbstract, scene: QGraphicsScene):
         self.figures_usecase = figures_usecase
@@ -15,7 +26,6 @@ class DraggableRectItem(QGraphicsRectItem):
         self.color = figure.color
         self.setBrush(figure.color)
         self.setPen(figure.color)
-        self.prev_pos = self.pos()
 
         self.connections_usecase.select_subscribe(self.onSelect)
 
@@ -24,9 +34,9 @@ class DraggableRectItem(QGraphicsRectItem):
         self.setAcceptedMouseButtons(Qt.MouseButton.LeftButton)
         self.setZValue(10)
 
+    # Обработка события перемещения фигуры
     def itemChange(self, change: 'QGraphicsItem.GraphicsItemChange', value: QPointF):
         if change == QGraphicsItem.GraphicsItemChange.ItemPositionChange:
-            self.prev_pos = self.pos()
             if not self.has_collision(value) and self.is_in_scene(value):
                 return super().itemChange(change, value)
             else:
@@ -37,6 +47,7 @@ class DraggableRectItem(QGraphicsRectItem):
         else:
           return super().itemChange(change, value)
     
+    # Проверка на пересечение фигур
     def has_collision(self, value: QPointF):
         rect = self.figures_usecase.get(self.id)
         if rect is None:
@@ -45,6 +56,7 @@ class DraggableRectItem(QGraphicsRectItem):
         rect.position = (rect.initial_position[0] + value.x(), rect.initial_position[1] + value.y())
         return self.figures_usecase.is_collided(rect)
     
+    # Проверка на нахождение в сцене
     def is_in_scene(self, value: QPointF):
         rect = self.figures_usecase.get(self.id)
         if rect is None:
@@ -54,6 +66,7 @@ class DraggableRectItem(QGraphicsRectItem):
         bottom_left, top_right = rect.get_bbox()
         return self.parent_scene.sceneRect().contains(bottom_left[0], bottom_left[1]) and self.parent_scene.sceneRect().contains(top_right[0], top_right[1])
     
+    # Обработка события выбора фигуры для изменения внешнего вида выделенных фигур
     def onSelect(self, connections: list[str]):
         try:
           if connections.index(self.id) >= 0:
@@ -61,6 +74,7 @@ class DraggableRectItem(QGraphicsRectItem):
         except ValueError:
             self.setPen(self.color)
     
+    # Обработка события выбора фигуры
     def selectItem(self):
         connections = self.connections_usecase.select(self.id)
         if len(connections) == 2:

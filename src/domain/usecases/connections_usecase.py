@@ -3,6 +3,15 @@ from domain.entities.FiguresConnection import FiguresConnection, FiguresConnecti
 from domain.usecases.connections_usecase_abstract import ConnectionsUseCaseAbstract
 from frameworks.storages.storage_abstract import StorageAbstract
 
+""" Класс содержащий бизнес-логику для работы с соединениями фигур
+
+    Attributes:
+        connections (List[str]): Список идентификаторов фигур, которые были выбраны для соединения
+        repository (StorageAbstract[FiguresConnection, FiguresConnectionCreationProps]): Репозиторий для хранения соединений
+        select_subscribers (List[Callable]): Список подписчиков на событие выбора фигуры
+        create_subscribers (List[Callable]): Список подписчиков на событие создания соединения
+
+"""
 class ConnectionsUseCase(ConnectionsUseCaseAbstract):
     def __init__(self, repository: StorageAbstract[FiguresConnection, FiguresConnectionCreationProps]):
         self.connections: List[str] = []

@@ -12,6 +12,16 @@ from frameworks.views.connection_view import ConnectionItem
 from frameworks.views.rect_view import DraggableRectItem
 from constants import rectangle_height, rectangle_width
 
+""" Реализация QGraphicsScene для отображения фигур и соединений
+
+    Attributes:
+        figures_usecase (FigureUseCaseAbstract[ColoredRectangle, ColoredRectangleCreationProps]): Используемый usecase для работы с фигурами
+        connections_usecase (ConnectionsUseCaseAbstract): Используемый usecase для работы с соединениями
+        width (float): Ширина сцены
+        height (float): Высота сцены
+        parent (Any): Родительский элемент
+    
+"""
 class SceneView(QGraphicsScene):
     def __init__(self, figures_usecase: FigureUseCaseAbstract[ColoredRectangle, ColoredRectangleCreationProps], connections_usecase: ConnectionsUseCaseAbstract, width: float, height: float, parent=None):
         super().__init__(0, 0, width, height, parent)
