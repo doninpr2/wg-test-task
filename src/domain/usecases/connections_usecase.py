@@ -1,5 +1,5 @@
 from typing import List, Callable
-from domain.entities.FiguresConnection import FiguresConnection, FiguresConnectionCreationProps
+from src.domain.entities.figures_connection import FiguresConnection, FiguresConnectionCreationProps
 from domain.usecases.connections_usecase_abstract import ConnectionsUseCaseAbstract
 from frameworks.storages.storage_abstract import StorageAbstract
 

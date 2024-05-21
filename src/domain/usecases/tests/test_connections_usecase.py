@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import Mock
-from domain.entities.FiguresConnection import FiguresConnection
+from src.domain.entities.figures_connection import FiguresConnection
 from domain.usecases.connections_usecase import ConnectionsUseCase
 from frameworks.storages.storage_abstract import StorageAbstract
 

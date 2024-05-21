@@ -1,5 +1,5 @@
 from typing import List, Callable
-from domain.entities.ColoredRectangle import ColoredRectangle, ColoredRectangleCreationProps
+from src.domain.entities.colored_rectangle import ColoredRectangle, ColoredRectangleCreationProps
 from domain.usecases.figure_usecase_abstract import FigureUseCaseAbstract
 from frameworks.storages.storage_abstract import StorageAbstract
 from constants import window_width, window_height

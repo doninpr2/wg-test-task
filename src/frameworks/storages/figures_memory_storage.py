@@ -1,5 +1,5 @@
 import uuid
-from domain.entities.ColoredRectangle import ColoredRectangle, ColoredRectangleCreationProps
+from src.domain.entities.colored_rectangle import ColoredRectangle, ColoredRectangleCreationProps
 from frameworks.storages.storage_abstract import StorageAbstract
 
 """ Реализация хранилища для фигур """

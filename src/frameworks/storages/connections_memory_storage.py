@@ -1,5 +1,5 @@
 import uuid
-from domain.entities.FiguresConnection import FiguresConnection, FiguresConnectionCreationProps
+from src.domain.entities.figures_connection import FiguresConnection, FiguresConnectionCreationProps
 from frameworks.storages.storage_abstract import StorageAbstract
 
 """ Реализация хранилища для соединений фигур """

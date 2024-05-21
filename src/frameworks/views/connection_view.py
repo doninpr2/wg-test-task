@@ -2,8 +2,8 @@ from PyQt6.QtWidgets import QGraphicsLineItem
 from PyQt6.QtGui import QColor, QPen
 from PyQt6.QtCore import Qt, QPointF
 
-from domain.entities.ColoredRectangle import ColoredRectangle, ColoredRectangleCreationProps
-from domain.entities.FiguresConnection import FiguresConnection
+from src.domain.entities.colored_rectangle import ColoredRectangle, ColoredRectangleCreationProps
+from src.domain.entities.figures_connection import FiguresConnection
 from domain.usecases.connections_usecase_abstract import ConnectionsUseCaseAbstract
 from domain.usecases.figure_usecase_abstract import FigureUseCaseAbstract
 

@@ -1,6 +1,6 @@
 import pytest
 import uuid
-from domain.entities.ColoredRectangle import ColoredRectangle, ColoredRectangleCreationProps
+from src.domain.entities.colored_rectangle import ColoredRectangle, ColoredRectangleCreationProps
 from frameworks.storages.figures_memory_storage import FiguresMemoryStorage
 
 @pytest.fixture

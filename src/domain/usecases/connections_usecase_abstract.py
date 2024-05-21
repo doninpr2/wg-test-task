@@ -2,7 +2,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from domain.entities.FiguresConnection import FiguresConnection
+from src.domain.entities.figures_connection import FiguresConnection
 
 class ConnectionsUseCaseAbstract(ABC):
 

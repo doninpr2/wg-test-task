@@ -1,6 +1,6 @@
 import pytest
 import uuid
-from domain.entities.FiguresConnection import FiguresConnection
+from src.domain.entities.figures_connection import FiguresConnection
 from frameworks.storages.connections_memory_storage import ConnectionsMemoryStorage
 
 @pytest.fixture

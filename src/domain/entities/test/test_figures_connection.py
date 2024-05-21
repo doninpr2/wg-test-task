@@ -1,5 +1,5 @@
 import pytest
-from domain.entities.FiguresConnection import FiguresConnection
+from src.domain.entities.figures_connection import FiguresConnection
 
 def test_figures_connection_init():
     connection = FiguresConnection(id="1", connection=("start_id", "end_id"))
