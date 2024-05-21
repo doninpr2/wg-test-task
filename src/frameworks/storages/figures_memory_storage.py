@@ -1,5 +1,5 @@
 import uuid
-from src.domain.entities.colored_rectangle import ColoredRectangle, ColoredRectangleCreationProps
+from domain.entities.colored_rectangle import ColoredRectangle, ColoredRectangleCreationProps
 from frameworks.storages.storage_abstract import StorageAbstract
 
 """ Реализация хранилища для фигур """
@@ -22,6 +22,10 @@ class FiguresMemoryStorage(StorageAbstract[ColoredRectangle, ColoredRectangleCre
     def update(self, figure: ColoredRectangle):
         self.figures[figure.id] = figure
         return self.figures[figure.id]
+    
+    def delete(self, id: str):
+        figure = self.figures.pop(id, None)
+        return figure
         
     def __repr__(self):
         return f"FiguresStorage(figures={self.figures})"

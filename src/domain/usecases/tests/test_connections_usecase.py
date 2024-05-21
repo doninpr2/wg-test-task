@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import Mock
-from src.domain.entities.figures_connection import FiguresConnection
+from domain.entities.figures_connection import FiguresConnection
 from domain.usecases.connections_usecase import ConnectionsUseCase
 from frameworks.storages.storage_abstract import StorageAbstract
 
@@ -66,3 +66,12 @@ def test_get_connections(connections_use_case):
     connections = connections_use_case.get_connections()
     
     assert connections == ["item1", "item2"]
+
+def test_delete(connections_use_case, mock_storage):
+    connection = FiguresConnection(id="1", connection=("item1", "item2"))
+    mock_storage.delete.return_value = connection
+    
+    deleted_connection = connections_use_case.delete("1")
+    
+    assert deleted_connection == connection
+    mock_storage.delete.assert_called_once_with(id="1")

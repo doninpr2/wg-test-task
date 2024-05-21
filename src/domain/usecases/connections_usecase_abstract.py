@@ -2,7 +2,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from src.domain.entities.figures_connection import FiguresConnection
+from domain.entities.figures_connection import FiguresConnection
 
 class ConnectionsUseCaseAbstract(ABC):
 
@@ -34,4 +34,9 @@ class ConnectionsUseCaseAbstract(ABC):
     @abstractmethod
     def get_selected(self) -> List[str]:
         """ Get selected connections. """
+        pass
+
+    @abstractmethod
+    def delete(self, itemId: str):
+        """ Delete connection. """
         pass

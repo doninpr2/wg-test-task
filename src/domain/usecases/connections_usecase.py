@@ -1,5 +1,5 @@
 from typing import List, Callable
-from src.domain.entities.figures_connection import FiguresConnection, FiguresConnectionCreationProps
+from domain.entities.figures_connection import FiguresConnection, FiguresConnectionCreationProps
 from domain.usecases.connections_usecase_abstract import ConnectionsUseCaseAbstract
 from frameworks.storages.storage_abstract import StorageAbstract
 
@@ -36,6 +36,13 @@ class ConnectionsUseCase(ConnectionsUseCaseAbstract):
             print(f"Ошибка выделения элемента: {e}")
         
         return self.connections
+    
+    def delete(self, itemId: str):
+        try:
+            return self.repository.delete(id=itemId)
+        except Exception as e:
+            print(f"Ошибка удаления элемента: {e}")
+            return None
 
     def create(self) -> FiguresConnection:
         try:

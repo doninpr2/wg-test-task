@@ -1,5 +1,5 @@
 from typing import List, Callable
-from src.domain.entities.colored_rectangle import ColoredRectangle, ColoredRectangleCreationProps
+from domain.entities.colored_rectangle import ColoredRectangle, ColoredRectangleCreationProps
 from domain.usecases.figure_usecase_abstract import FigureUseCaseAbstract
 from frameworks.storages.storage_abstract import StorageAbstract
 from constants import window_width, window_height
@@ -58,8 +58,6 @@ class FigureUseCase(FigureUseCaseAbstract[ColoredRectangle, ColoredRectangleCrea
                 return None
             
             rect.position = (rect.initial_position[0] + pos_x, rect.initial_position[1] + pos_y)
-
-            print(rect.position)
 
             for subscriber in self.move_subscribers:
                 try:

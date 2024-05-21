@@ -1,6 +1,6 @@
 import pytest
 import uuid
-from src.domain.entities.figures_connection import FiguresConnection
+from domain.entities.figures_connection import FiguresConnection
 from frameworks.storages.connections_memory_storage import ConnectionsMemoryStorage
 
 @pytest.fixture
@@ -43,3 +43,10 @@ def test_update_connection(storage):
     updated_connection = storage.update(connection)
     
     assert updated_connection.connection == ("5", "6")
+
+def test_delete_connection(storage):
+    connection = storage.add(connection=("1", "2"))
+    deleted_connection = storage.delete(connection.id)
+    
+    assert deleted_connection == connection
+    assert connection.id not in storage.connections

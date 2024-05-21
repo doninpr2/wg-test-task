@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import Mock
-from src.domain.entities.colored_rectangle import ColoredRectangle, ColoredRectangleCreationProps
+from domain.entities.colored_rectangle import ColoredRectangle, ColoredRectangleCreationProps
 from domain.usecases.figure_usecase import FigureUseCase
 from frameworks.storages.storage_abstract import StorageAbstract
 

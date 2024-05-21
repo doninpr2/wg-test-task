@@ -24,3 +24,8 @@ class StorageAbstract(ABC, Generic[T, CreateProps]):
     def update(self, object: T) -> T:
         """Update object in the storage."""
         pass
+
+    @abstractmethod
+    def delete(self, id: str) -> T:
+        """Delete object from the storage."""
+        pass

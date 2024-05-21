@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import QGraphicsRectItem, QGraphicsItem, QGraphicsScene
 from PyQt6.QtCore import Qt, QPointF
 
-from src.domain.entities.colored_rectangle import ColoredRectangle, ColoredRectangleCreationProps
+from domain.entities.colored_rectangle import ColoredRectangle, ColoredRectangleCreationProps
 from domain.usecases.connections_usecase_abstract import ConnectionsUseCaseAbstract
 from domain.usecases.figure_usecase_abstract import FigureUseCaseAbstract
 

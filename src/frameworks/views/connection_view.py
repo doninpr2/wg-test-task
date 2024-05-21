@@ -2,8 +2,8 @@ from PyQt6.QtWidgets import QGraphicsLineItem
 from PyQt6.QtGui import QColor, QPen
 from PyQt6.QtCore import Qt, QPointF
 
-from src.domain.entities.colored_rectangle import ColoredRectangle, ColoredRectangleCreationProps
-from src.domain.entities.figures_connection import FiguresConnection
+from domain.entities.colored_rectangle import ColoredRectangle, ColoredRectangleCreationProps
+from domain.entities.figures_connection import FiguresConnection
 from domain.usecases.connections_usecase_abstract import ConnectionsUseCaseAbstract
 from domain.usecases.figure_usecase_abstract import FigureUseCaseAbstract
 
@@ -28,8 +28,9 @@ class ConnectionItem(QGraphicsLineItem):
         line_points = self.getPositionByFigures()
         start_pos = line_points['start']
         end_pos = line_points['end']
+        self.parent = parent
 
-        super().__init__(start_pos[0], start_pos[1], end_pos[0], end_pos[1], parent)
+        super().__init__(start_pos[0], start_pos[1], end_pos[0], end_pos[1])
 
         self.setPen(QPen(QColor(color), width))
         self.setZValue(11)
@@ -53,5 +54,18 @@ class ConnectionItem(QGraphicsLineItem):
         end_pos = (end_figure.position[0] + end_figure.width / 2, end_figure.position[1] + end_figure.height / 2)
 
         return { 'start': start_pos, 'end': end_pos}
+    
+    def delete_connection(self):
+        try:
+            self.connections_usecase.delete(self.connection.id)
+            scene = self.scene()
+            if scene:
+                scene.removeItem(self)
+            print(f"Соединение {self.connection.id} удалено")
+        except Exception as e:
+            print(f"Ошибка при удалении соединения: {e}")
 
-
+    def mousePressEvent(self, event):
+        if event.button() == Qt.MouseButton.LeftButton:
+            self.delete_connection()
+        super().mousePressEvent(event)

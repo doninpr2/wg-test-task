@@ -4,8 +4,8 @@ from PyQt6.QtWidgets import QGraphicsScene
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QColor
 
-from src.domain.entities.colored_rectangle import ColoredRectangle, ColoredRectangleCreationProps
-from src.domain.entities.figures_connection import FiguresConnection
+from domain.entities.colored_rectangle import ColoredRectangle, ColoredRectangleCreationProps
+from domain.entities.figures_connection import FiguresConnection
 from domain.usecases.connections_usecase_abstract import ConnectionsUseCaseAbstract
 from domain.usecases.figure_usecase_abstract import FigureUseCaseAbstract
 from frameworks.views.connection_view import ConnectionItem
@@ -34,7 +34,7 @@ class SceneView(QGraphicsScene):
         self.setBackgroundBrush(QColor('white'))
 
     def draw_connection(self, connection: FiguresConnection):
-        line_item = ConnectionItem(self.figures_usecase, self.connections_usecase, connection, 'black', 2)
+        line_item = ConnectionItem(self.figures_usecase, self.connections_usecase, connection, 'black', 2, self)
         self.addItem(line_item)
 
     def draw_figure(self, figure: ColoredRectangle):

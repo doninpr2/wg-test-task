@@ -1,6 +1,6 @@
 import pytest
 import uuid
-from src.domain.entities.colored_rectangle import ColoredRectangle, ColoredRectangleCreationProps
+from domain.entities.colored_rectangle import ColoredRectangle, ColoredRectangleCreationProps
 from frameworks.storages.figures_memory_storage import FiguresMemoryStorage
 
 @pytest.fixture
@@ -52,3 +52,10 @@ def test_update_figure(storage):
     assert updated_figure.width == 200
     assert updated_figure.height == 100
     assert updated_figure.color == "red"
+
+def test_delete_figure(storage):
+    figure = storage.add(position=(10, 10), width=100, height=50, color="blue")
+    deleted_figure = storage.delete(figure.id)
+    
+    assert deleted_figure == figure
+    assert figure.id not in storage.figures

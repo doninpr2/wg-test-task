@@ -1,5 +1,5 @@
 import pytest
-from src.domain.entities.colored_rectangle import ColoredRectangle
+from domain.entities.colored_rectangle import ColoredRectangle
 from domain.utils.collisions_tools import do_rectangles_intersect
 
 def test_colored_rectangle_init():
