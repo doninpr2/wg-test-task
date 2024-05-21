@@ -1,42 +1,54 @@
-import unittest
+import pytest
+import uuid
+from domain.entities.ColoredRectangle import ColoredRectangle, ColoredRectangleCreationProps
 from frameworks.storages.figures_memory_storage import FiguresMemoryStorage
 
-class TestFiguresMemoryStorage(unittest.TestCase):
+@pytest.fixture
+def storage():
+    return FiguresMemoryStorage()
 
-    def setUp(self):
-        self.storage = FiguresMemoryStorage()
+def test_add_figure(storage):
+    figure = storage.add(position=(10, 10), width=100, height=50, color="blue")
+    
+    assert isinstance(figure, ColoredRectangle)
+    assert figure.position == (10, 10)
+    assert figure.width == 100
+    assert figure.height == 50
+    assert figure.color == "blue"
+    assert figure.id in storage.figures
 
-    def test_add_figure(self):
-        position = (10, 20)
-        figure = self.storage.add(position)
-        self.assertIsNotNone(figure.id)
-        self.assertEqual(figure.position, position)
-        self.assertIn(figure.id, self.storage.figures)
+def test_get_figure(storage):
+    figure = storage.add(position=(10, 10), width=100, height=50, color="blue")
+    retrieved_figure = storage.get(figure.id)
+    
+    assert retrieved_figure == figure
 
-    def test_get_figure(self):
-        position = (10, 20)
-        added_figure = self.storage.add(position)
-        retrieved_figure = self.storage.get(added_figure.id)
-        self.assertEqual(added_figure, retrieved_figure)
+def test_get_figure_not_found(storage):
+    figure_id = str(uuid.uuid4())
+    retrieved_figure = storage.get(figure_id)
+    
+    assert retrieved_figure is None
 
-    def test_get_all_figures(self):
-        position1 = (10, 20)
-        position2 = (30, 40)
-        self.storage.add(position1)
-        self.storage.add(position2)
-        all_figures = self.storage.get_all()
-        self.assertEqual(len(all_figures), 2)
-        self.assertEqual(all_figures[0].position, position1)
-        self.assertEqual(all_figures[1].position, position2)
+def test_get_all_figures(storage):
+    figure1 = storage.add(position=(10, 10), width=100, height=50, color="blue")
+    figure2 = storage.add(position=(20, 20), width=200, height=100, color="red")
+    
+    all_figures = storage.get_all()
+    
+    assert len(all_figures) == 2
+    assert figure1 in all_figures
+    assert figure2 in all_figures
 
-    def test_update_figure(self):
-        position = (10, 20)
-        added_figure = self.storage.add(position)
-        new_position = (30, 40)
-        added_figure.position = new_position
-        self.storage.update(added_figure)
-        updated_figure = self.storage.get(added_figure.id)
-        self.assertEqual(updated_figure.position, new_position)
-
-if __name__ == "__main__":
-    unittest.main()
+def test_update_figure(storage):
+    figure = storage.add(position=(10, 10), width=100, height=50, color="blue")
+    figure.position = (20, 20)
+    figure.width = 200
+    figure.height = 100
+    figure.color = "red"
+    
+    updated_figure = storage.update(figure)
+    
+    assert updated_figure.position == (20, 20)
+    assert updated_figure.width == 200
+    assert updated_figure.height == 100
+    assert updated_figure.color == "red"

@@ -1,62 +1,137 @@
-import unittest
-from unittest.mock import MagicMock
+import pytest
+from unittest.mock import Mock
+from domain.entities.ColoredRectangle import ColoredRectangle, ColoredRectangleCreationProps
 from domain.usecases.figure_usecase import FigureUseCase
-from domain.entities.ColoredRectangle import ColoredRectangle
+from frameworks.storages.storage_abstract import StorageAbstract
 
-class TestFigureUseCase(unittest.TestCase):
+@pytest.fixture
+def mock_storage():
+    return Mock(spec=StorageAbstract)
 
-    def setUp(self):
-        self.repository = MagicMock()
-        self.figure_use_case = FigureUseCase(self.repository)
+@pytest.fixture
+def figure_use_case(mock_storage):
+    return FigureUseCase(repository=mock_storage)
 
-    def test_create(self):
-        position = (10, 20)
-        figure = ColoredRectangle(id="1", position=position)
-        self.repository.add.return_value = figure
+def test_create_figure_success(figure_use_case, mock_storage):
+    mock_storage.add.return_value = ColoredRectangle(
+        id="1", 
+        position=(10, 10), 
+        width=100, 
+        height=50, 
+        color="blue"
+    )
 
-        created_figure = self.figure_use_case.create(position)
+    mock_storage.get_all.return_value = []
 
-        self.repository.add.assert_called_once_with(position)
-        self.assertEqual(created_figure, figure)
+    new_figure = figure_use_case.create(
+        position=(10, 10), 
+        width=100, 
+        height=50, 
+        color="blue"
+    )
 
-    def test_get(self):
-        figure = ColoredRectangle(id="1", position=(10, 20))
-        self.repository.get.return_value = figure
+    assert new_figure is not None
+    assert new_figure.position == (10, 10)
+    assert new_figure.width == 100
+    assert new_figure.height == 50
+    assert new_figure.color == "blue"
+    mock_storage.add.assert_called_once_with(
+        position=(10, 10), 
+        width=100, 
+        height=50, 
+        color="blue"
+    )
 
-        retrieved_figure = self.figure_use_case.get("1")
+def test_create_figure_collision(figure_use_case, mock_storage):
+    existing_figure = ColoredRectangle(
+        id="1", 
+        position=(10, 10), 
+        width=100, 
+        height=50, 
+        color="blue"
+    )
+    mock_storage.get_all.return_value = [existing_figure]
 
-        self.repository.get.assert_called_once_with("1")
-        self.assertEqual(retrieved_figure, figure)
+    new_figure = figure_use_case.create(
+        position=(10, 10), 
+        width=100, 
+        height=50, 
+        color="red"
+    )
 
-    def test_get_all(self):
-        figures = [ColoredRectangle(id="1", position=(10, 20)), ColoredRectangle(id="2", position=(30, 40))]
-        self.repository.get_all.return_value = figures
+    assert new_figure is None
+    mock_storage.add.assert_not_called()
 
-        all_figures = self.figure_use_case.get_all()
+def test_get_figure(figure_use_case, mock_storage):
+    figure = ColoredRectangle(
+        id="1", 
+        position=(10, 10), 
+        width=100, 
+        height=50, 
+        color="blue"
+    )
+    mock_storage.get.return_value = figure
 
-        self.repository.get_all.assert_called_once()
-        self.assertEqual(all_figures, figures)
+    result = figure_use_case.get("1")
 
-    def test_move(self):
-        figure = ColoredRectangle(id="1", position=(10, 20))
-        updated_figure = ColoredRectangle(id="1", position=(30, 40))
-        self.repository.get.return_value = figure
-        self.repository.update.return_value = updated_figure
+    assert result == figure
+    mock_storage.get.assert_called_once_with("1")
 
-        result = self.figure_use_case.move("1", 30, 40)
+def test_move_figure(figure_use_case, mock_storage):
+    figure = ColoredRectangle(
+        id="1", 
+        position=(10, 10), 
+        width=100, 
+        height=50, 
+        color="blue"
+    )
+    mock_storage.get.return_value = figure
+    mock_storage.update.return_value = figure
 
-        self.repository.get.assert_called_once_with("1")
-        self.assertEqual(figure.position, (30, 40))
-        self.repository.update.assert_called_once_with(figure)
-        self.assertEqual(result, updated_figure)
+    updated_figure = figure_use_case.move("1", 20, 30)
 
-    def test_move_nonexistent(self):
-        self.repository.get.return_value = None
+    assert updated_figure.position == (30, 40)
+    mock_storage.update.assert_called_once()
+    mock_storage.get.assert_called_once_with("1")
 
-        result = self.figure_use_case.move("nonexistent_id", 30, 40)
+def test_is_collided(figure_use_case, mock_storage):
+    existing_figure = ColoredRectangle(
+        id="1", 
+        position=(10, 10), 
+        width=100, 
+        height=50, 
+        color="blue"
+    )
+    new_figure = ColoredRectangle(
+        id="2", 
+        position=(15, 15), 
+        width=100, 
+        height=50, 
+        color="red"
+    )
+    mock_storage.get_all.return_value = [existing_figure]
 
-        self.repository.get.assert_called_once_with("nonexistent_id")
-        self.assertIsNone(result)
+    result = figure_use_case.is_collided(new_figure)
 
-if __name__ == "__main__":
-    unittest.main()
+    assert result is True
+
+def test_no_collision(figure_use_case, mock_storage):
+    existing_figure = ColoredRectangle(
+        id="1", 
+        position=(10, 10), 
+        width=100, 
+        height=50, 
+        color="blue"
+    )
+    new_figure = ColoredRectangle(
+        id="2", 
+        position=(200, 200), 
+        width=100, 
+        height=50, 
+        color="red"
+    )
+    mock_storage.get_all.return_value = [existing_figure]
+
+    result = figure_use_case.is_collided(new_figure)
+
+    assert result is False

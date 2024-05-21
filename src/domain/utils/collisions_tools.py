@@ -17,6 +17,8 @@ def do_rectangles_intersect(rect1_bottom_left: tuple[float, float], rect1_top_ri
     x3, y3 = rect2_bottom_left
     x4, y4 = rect2_top_right
 
+    # print('debug: ', (x1 <= x3 and x3 <= x2), (x1 <= x4 and x4 <= x2), (y2 <= y3 and y3 <= y1), (y2 <= y4 and y4 <= y1))
+
     if ((x1 <= x3 and x3 <= x2) or (x1 <= x4 and x4 <= x2)) and ((y2 <= y3 and y3 <= y1) or (y2 <= y4 and y4 <= y1)):
         return True
 

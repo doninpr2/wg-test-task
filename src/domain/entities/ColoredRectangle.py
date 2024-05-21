@@ -1,6 +1,6 @@
 from typing import Protocol, Tuple
 
-from domain.utils.collisions_tools import do_rectangles_intersect, is_point_inside_rect
+from domain.utils.collisions_tools import do_rectangles_intersect
 
 class ColoredRectangleCreationProps(Protocol):
     position: Tuple[float, float]

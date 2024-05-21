@@ -13,3 +13,6 @@ install:
 run:
 	@echo "Running the application..."
 	python src/main.py
+
+test:
+	python src/run_tests.py

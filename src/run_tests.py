@@ -1,12 +1,15 @@
-import unittest
 import os
+import sys
+import pytest
 
-def discover_and_run_tests(start_dir):
-    loader = unittest.TestLoader()
-    suite = loader.discover(start_dir, pattern="test*.py")
-    runner = unittest.TextTestRunner()
-    runner.run(suite)
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__))))
 
-if __name__ == "__main__":
-    start_dir = os.path.dirname(os.path.abspath(__file__))
-    discover_and_run_tests(start_dir)
+pytest_args = [
+    # 'src',  # Directory containing tests
+    '-v',  # Verbose output
+    '--maxfail=1',  # Stop after first failure
+    # '--disable-warnings'  # Disable warnings
+]
+
+exit_code = pytest.main(pytest_args)
+sys.exit(exit_code)
